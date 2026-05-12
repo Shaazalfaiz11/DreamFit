@@ -521,6 +521,9 @@ import storeKeeperRoutes from "./routes/storeKeeper.routes.js";
 // BANKING / TRANSACTION ROUTES
 import transactionRoutes from "./routes/transaction.routes.js";
 
+// APPOINTMENT ROUTES
+import appointmentRoutes from "./routes/appointment.routes.js";
+
 // IMPORT ERROR HANDLING MIDDLEWARE
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
@@ -540,10 +543,14 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5173",
   "http://127.0.0.1:5173",
+  "http://localhost:5174",
+  "http://127.0.0.1:5174",
+  "http://localhost:5175",
+  "http://127.0.0.1:5175",
+  "http://localhost:5176",
   "http://localhost:5000",
- "https://dream-fitcouture-bnuc.vercel.app",
- "https://dream-fitcouture.vercel.app"
-
+  "https://dream-fitcouture-bnuc.vercel.app",
+  "https://dream-fitcouture.vercel.app"
 ];
 
 app.use(
@@ -840,6 +847,11 @@ app.use("/api/store-keepers", storeKeeperRoutes);
 // 💰 BANKING / TRANSACTION MANAGEMENT - COMPLETE ✅
 // ====================================================
 app.use("/api/transactions", transactionRoutes);
+
+// ====================================================
+// 📅 APPOINTMENT MANAGEMENT - COMPLETE ✅
+// ====================================================
+app.use("/api/appointments", appointmentRoutes);
 
 // ==================== ERROR HANDLING MIDDLEWARE ====================
 app.use(notFound);

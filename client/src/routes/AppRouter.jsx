@@ -477,6 +477,9 @@ const PaymentDetails = lazy(() => import("../Pages/admin/payment/PaymentDetails"
 // 🚀 LAZY LOADING - NOTIFICATION COMPONENTS
 const NotificationsPage = lazy(() => import("../Pages/notifications/NotificationsPage"));
 
+// 🚀 LAZY LOADING - APPOINTMENTS
+const AppointmentsPage = lazy(() => import("../Pages/admin/appointment/AppointmentsPage"));
+
 // Placeholders (keep as is - they're simple components)
 const ManagerDashboard = () => (
   <div className="p-8 font-black text-slate-800 uppercase italic">
@@ -598,6 +601,9 @@ export default function AppRouter() {
             <Route path="orders/:id" element={<OrderDetails />} />
             <Route path="orders/edit/:id" element={<EditOrder />} />
             
+            {/* Appointments Management */}
+            <Route path="appointments" element={<AppointmentsPage />} />
+            
             {/* Garment Management */}
             <Route path="garments/:id" element={<GarmentDetails />} />
             <Route path="garments/edit/:id" element={<EditGarment />} />
@@ -693,6 +699,9 @@ export default function AppRouter() {
             <Route path="orders/new" element={<NewOrder />} />
             <Route path="orders/:id" element={<OrderDetails />} />
             <Route path="orders/edit/:id" element={<EditOrder />} />
+            
+            {/* Appointments Management */}
+            <Route path="appointments" element={<AppointmentsPage />} />
             
             {/* Garment Management */}
             <Route path="garments/:id" element={<GarmentDetails />} />

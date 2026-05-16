@@ -563,6 +563,8 @@ export default function MainLayout() {
   
   const [bankingOpen, setBankingOpen] = useState(false);
   const [reportsOpen, setReportsOpen] = useState(false);
+  const [ordersOutsourcingOpen, setOrdersOutsourcingOpen] = useState(false);
+  const [employeeManagementOpen, setEmployeeManagementOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [desktopSidebarOpen, setDesktopSidebarOpen] = useState(true);
@@ -667,11 +669,23 @@ export default function MainLayout() {
     { id: 'inventory', label: 'Inventory Report', icon: Package, path: `/${rolePath}/reports/inventory` },
   ];
 
+  const ordersOutsourcingItems = [
+    { id: 'orders-sub', label: 'Orders', icon: ShoppingCart, path: `/${rolePath}/orders` },
+    { id: 'outsourcing-sub', label: 'Outsourcing', icon: Truck, path: `/${rolePath}/outsourcing` },
+  ];
+
+  const employeeManagementItems = [
+    { id: 'employees-sub', label: 'Employees', icon: UserCircle, path: `/${rolePath}/staff` },
+    { id: 'attendance-sub', label: 'Attendance', icon: Clock, path: `/${rolePath}/attendance` },
+    { id: 'leave-sub', label: 'Leave Management', icon: Calendar, path: `/${rolePath}/leave` },
+    { id: 'salary-sub', label: 'Payroll & Salary', icon: Wallet, path: `/${rolePath}/salary` },
+  ];
+
   const getNavigationItems = () => {
     const items = [
       { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard', path: `/${rolePath}/dashboard`, show: true },
       { id: 'customers', icon: Users, label: 'Customers', path: `/${rolePath}/customers`, show: canViewCustomers },
-      { id: 'orders', icon: ShoppingCart, label: 'Orders', path: `/${rolePath}/orders`, show: canViewOrders },
+      { id: 'ordersOutsourcing', icon: ShoppingCart, label: 'Orders & Outsourcing', path: '#', show: canViewOrders, isDropdown: true },
       { id: 'works', icon: Briefcase, label: 'Works', path: `/${rolePath}/works`, show: canViewWorks },
       { id: 'tailors', icon: Scissors, label: 'Tailors', path: `/${rolePath}/tailors`, show: canViewTailors },
       { id: 'cutting-masters', icon: HardHat, label: 'Cutting Masters', path: `/${rolePath}/cutting-masters`, show: canViewCuttingMasters },
@@ -680,7 +694,7 @@ export default function MainLayout() {
       { id: 'products', icon: Package, label: 'Products', path: `/${rolePath}/products`, show: canViewProducts },
       { id: 'appointments', icon: Calendar, label: 'Appointments', path: `/${rolePath}/appointments`, show: true },
       { id: 'banking', icon: Landmark, label: 'Banking', path: '#', show: canViewBanking, isDropdown: true },
-      { id: 'staff', icon: UserCircle, label: 'Staff', path: `/${rolePath}/staff`, show: canViewStaff },
+      { id: 'employeeManagement', icon: UserCircle, label: 'Employee Management', path: '#', show: canViewStaff, isDropdown: true },
     ];
     return items.filter(item => item.show);
   };
@@ -711,12 +725,26 @@ export default function MainLayout() {
     return reportsItems.some(item => isActive(item.path));
   };
 
+  const isOrdersOutsourcingActive = () => {
+    return ordersOutsourcingItems.some(item => isActive(item.path));
+  };
+
+  const isEmployeeManagementActive = () => {
+    return employeeManagementItems.some(item => isActive(item.path));
+  };
+
   useEffect(() => {
     if (isBankingActive() && !bankingOpen) {
       setBankingOpen(true);
     }
     if (isReportsActive() && !reportsOpen) {
       setReportsOpen(true);
+    }
+    if (isOrdersOutsourcingActive() && !ordersOutsourcingOpen) {
+      setOrdersOutsourcingOpen(true);
+    }
+    if (isEmployeeManagementActive() && !employeeManagementOpen) {
+      setEmployeeManagementOpen(true);
     }
   }, [location.pathname]);
 
@@ -817,7 +845,7 @@ export default function MainLayout() {
         
         {filteredNavItems.map((item) => {
           const isItemActive = item.isDropdown 
-            ? (item.id === 'banking' && isBankingActive()) || (item.id === 'reports' && isReportsActive())
+            ? (item.id === 'banking' && isBankingActive()) || (item.id === 'reports' && isReportsActive()) || (item.id === 'ordersOutsourcing' && isOrdersOutsourcingActive()) || (item.id === 'employeeManagement' && isEmployeeManagementActive())
             : isActive(item.path);
           
           return (
@@ -828,6 +856,8 @@ export default function MainLayout() {
                     onClick={() => {
                       if (item.id === 'banking') setBankingOpen(!bankingOpen);
                       if (item.id === 'reports') setReportsOpen(!reportsOpen);
+                      if (item.id === 'ordersOutsourcing') setOrdersOutsourcingOpen(!ordersOutsourcingOpen);
+                      if (item.id === 'employeeManagement') setEmployeeManagementOpen(!employeeManagementOpen);
                     }}
                     className={`w-full flex justify-between items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium text-sm cursor-pointer ${
                       isItemActive 
@@ -844,7 +874,7 @@ export default function MainLayout() {
                         {item.label}
                       </span>
                     </div>
-                    {(item.id === 'banking' && bankingOpen) || (item.id === 'reports' && reportsOpen) ? (
+                    {(item.id === 'banking' && bankingOpen) || (item.id === 'reports' && reportsOpen) || (item.id === 'ordersOutsourcing' && ordersOutsourcingOpen) || (item.id === 'employeeManagement' && employeeManagementOpen) ? (
                       <ChevronDown size={14} className={`transition-all duration-300 ${
                         !desktopSidebarOpen && window.innerWidth >= 1024 ? 'hidden' : 'block'
                       }`} />
@@ -870,6 +900,66 @@ export default function MainLayout() {
                               isSubActive 
                                 ? 'text-blue-400 font-medium' 
                                 : 'text-slate-500 hover:text-blue-400'
+                            } ${!desktopSidebarOpen && window.innerWidth >= 1024 ? 'justify-center' : ''}`}
+                            onClick={closeSidebar}
+                            title={!desktopSidebarOpen && window.innerWidth >= 1024 ? sub.label : ""}
+                          >
+                            <sub.icon size={14} className="flex-shrink-0" />
+                            <span className={`transition-all duration-300 ${
+                              !desktopSidebarOpen && window.innerWidth >= 1024 ? 'hidden' : 'inline'
+                            }`}>
+                              {sub.label}
+                            </span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {item.id === 'ordersOutsourcing' && ordersOutsourcingOpen && (
+                    <div className={`ml-9 mt-1 space-y-1 border-l border-slate-700 pl-4 py-1 transition-all duration-300 ${
+                      !desktopSidebarOpen && window.innerWidth >= 1024 ? 'ml-0 pl-0 border-l-0' : ''
+                    }`}>
+                      {ordersOutsourcingItems.map(sub => {
+                        const isSubActive = isActive(sub.path);
+                        return (
+                          <Link 
+                            key={sub.id} 
+                            to={sub.path} 
+                            className={`flex items-center gap-2 py-2.5 px-3 text-sm rounded-xl transition-all duration-200 ${
+                              isSubActive 
+                                ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold shadow-md' 
+                                : 'text-slate-500 hover:text-white hover:bg-slate-800/40'
+                            } ${!desktopSidebarOpen && window.innerWidth >= 1024 ? 'justify-center' : ''}`}
+                            onClick={closeSidebar}
+                            title={!desktopSidebarOpen && window.innerWidth >= 1024 ? sub.label : ""}
+                          >
+                            <sub.icon size={14} className="flex-shrink-0" />
+                            <span className={`transition-all duration-300 ${
+                              !desktopSidebarOpen && window.innerWidth >= 1024 ? 'hidden' : 'inline'
+                            }`}>
+                              {sub.label}
+                            </span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {item.id === 'employeeManagement' && employeeManagementOpen && (
+                    <div className={`ml-9 mt-1 space-y-1 border-l border-slate-700 pl-4 py-1 transition-all duration-300 ${
+                      !desktopSidebarOpen && window.innerWidth >= 1024 ? 'ml-0 pl-0 border-l-0' : ''
+                    }`}>
+                      {employeeManagementItems.map(sub => {
+                        const isSubActive = isActive(sub.path);
+                        return (
+                          <Link 
+                            key={sub.id} 
+                            to={sub.path} 
+                            className={`flex items-center gap-2 py-2.5 px-3 text-sm rounded-xl transition-all duration-200 ${
+                              isSubActive 
+                                ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold shadow-md' 
+                                : 'text-slate-500 hover:text-white hover:bg-slate-800/40'
                             } ${!desktopSidebarOpen && window.innerWidth >= 1024 ? 'justify-center' : ''}`}
                             onClick={closeSidebar}
                             title={!desktopSidebarOpen && window.innerWidth >= 1024 ? sub.label : ""}
